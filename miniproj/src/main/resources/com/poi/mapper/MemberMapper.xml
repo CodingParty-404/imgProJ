@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.poi.mapper.MemberMapper">
+	
+
+	<select id="select" parameterType="Long" resultType="com.poi.vo.member.MemberVO">
+		select * from tbl_member where mno = #{mno}
+	</select>
+	<select id="getMemberListAllData" resultType="java.util.Map">
+		select m3.mno,m3.name,m3.email,m3.password,m3.company,m3.dept,m3.rolename, m3.regDate, m3.modiDate, m3.Organizer, em3.title"joined" from 
+(
+		select m2.mno,m2.name, email,password,company,dept,rolename,regDate,modiDate,title"Organizer" from 
+		(
+		select m2.mno,m2.name,m2.email,m2.password,m2.company,m2.dept,r2.rolename,m2.regDate,m2.modiDate from tbl_member m2 
+			left join (
+			-- role + roleCode
+			select member_no, rolename from tbl_role r join tbl_roleList_code rc
+			on r.role_no = rc.rlno	
+			)r2
+			on m2.mno = r2.member_no
+			where mno > 0
+			order by mno desc
+		) as m2 left join
+        (
+		-- member + meeting (개설자)
+		select mtno,title,mno,name from tbl_meeting me1 right join tbl_member m1
+		On me1.openMember = m1.mno
+		) as mm2
+		on m2.mno = mm2.mno
+) m3 left join 
+(
+select * from 
+tbl_meeting me1 join tbl_entryMember em1
+on me1.mtno = em1.meeting_no
+) em3
+on m3.mno = em3.member_no
+where m3.mno > 0
+order by m3.mno desc
+	</select>
+	<select id="getList" resultType="com.poi.vo.member.MemberVO">
+		select * from tbl_member
+	</select>
+	
+	<insert id="insert" parameterType="com.poi.vo.member.MemberVO">
+		insert into tbl_member (name, email, password, company, dept)
+		values (#{name},#{email},#{password},#{company},#{dept})
+		<selectKey keyProperty="mno" resultType="Long">
+			select Last_Insert_ID();
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.poi.vo.member.MemberVO">
+		update tbl_member set name=#{name}, password=#{password} 
+		<if test="email != null">
+			, email = #{email}
+		</if>
+		<if test="company != null">
+			, company=#{company}
+		</if>
+		<if test="dept != null">
+			, dept=#{dept}
+		</if>
+		where mno = #{mno}
+	</update>
+	<delete id="delete" parameterType="Long">
+		delete from tbl_member where mno = #{mno}
+	</delete>
+	
+	
+</mapper>

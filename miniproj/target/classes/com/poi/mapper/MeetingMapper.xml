@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poi.mapper.MeetingMapper">
+		
+		<insert id="insert" parameterType="com.poi.vo.meeting.MeetingVO">
+			insert into tbl_meeting 
+			(title, openMember, room, reservationStartDate, reservationEndDate)
+			values 
+			(#{title}, #{openMember},#{room},#{reservationStartDate},#{reservationEndDate})
+			<selectKey keyProperty="mtno" resultType="Long">
+			select Last_Insert_ID();
+		</selectKey>
+		</insert>
+		
+		<select id="getList" resultType="java.util.Map">
+			select me3.mtno, me3.title, m3.name openMember, me3.room, me3.reservationStartDate, me3.reservationEndDate, me3.realStartDate, me3.realEndDate, me3.name joinMember, me3.regDate, me3.modiDate
+				from (select me2.mtno, me2.title, me2.openMember, me2.name room, me2.reservationStartDate, me2.reservationEndDate, me2.realStartDate, me2.realEndDate, em2.name, me2.regDate, me2.modiDate 
+					from (select me1.mtno, me1.title, me1.openMember, r1.name, me1.reservationStartDate, me1.reservationEndDate, me1.realStartDate, me1.realEndDate, me1.regDate, me1.modiDate
+						from tbl_meeting me1 left join tbl_room r1	on me1.room = r1.rno) me2
+						left join
+						(select em1.meeting_no, m1.name
+							from tbl_member m1 inner join tbl_entryMember em1
+							on m1.mno = em1.emno
+						) em2
+					on me2.mtno = em2.meeting_no) me3
+				inner join 
+				tbl_member m3
+				on me3.openMember = m3.mno
+				where me3.mtno > 0
+			<if test="mtno != null">
+				and mtno = #{mtno}
+			</if>
+		</select>
+		
+		<update id="update" parameterType="com.poi.vo.meeting.MeetingVO">
+			Update tbl_meeting set
+			<if test="title!=null">
+				title = #{title}, 
+			</if> 
+			<if test="openMember!=null">
+			openMember = #{openMember}, 
+			</if> 
+	
+			<if test="room!=null">
+			room = #{room}, 
+			</if> 
+	
+			<if test="reservationStartDate!=null">
+			reservationStartDate = #{reservationStartDate}, 
+			</if> 
+	
+			<if test="reservationEndDate!=null">
+			reservationEndDate = #{reservationEndDate}, 
+			</if> 
+	
+			<if test="realStartDate!=null">
+			realStartDate = #{realStartDate}, 
+			</if> 
+	
+			<if test="realEndDate!=null">
+			realEndDate = #{realEndDate},
+			</if> 
+			modiDate = now()
+			where mtno = #{mtno}
+		</update>
+		
+	<delete id="delete" parameterType="Long">
+		delete from tbl_meeting where mtno = #{mtno}
+	</delete>
+		
+</mapper>

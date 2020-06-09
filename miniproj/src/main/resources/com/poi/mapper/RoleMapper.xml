@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.poi.mapper.RoleMapper">
+	
+	<select id="getList" parameterType="Long" resultType="com.poi.vo.member.RoleVO">
+		select mno "member_no", rolename from(select member_no "mno" ,rolename from tbl_role r, tbl_roleList_code rc where r.role_no = rc.rlno)m where mno = #{mno}	
+	</select>
+	
+<!-- 	<select id="select" parameterType="Long" resultType="com.poi.vo.RoleVO"> -->
+<!-- 		select mno, rolename from(select member_no "mno" ,rolename from tbl_role r, tbl_roleList_code rc where r.role_no = rc.rlno)m where mno = #{mno} -->
+<!-- 	</select> -->
+	
+	<insert id="insert" parameterType="com.poi.vo.member.RoleVO">
+		insert into tbl_role (role_no, member_no)
+		values
+		<foreach collection="roleList" item="i" separator=",">
+			(#{i},#{member_no})
+		 </foreach>
+	</insert>
+	
+	<update id="update" parameterType="com.poi.vo.member.RoleVO">
+		update tbl_role set role_no = #{changeRole_no}
+		where member_no = #{member_no}
+		and role_no = #{role_no}
+	</update>
+	
+	<delete id="delete" parameterType="com.poi.vo.member.RoleVO">
+		delete from tbl_role 
+		where member_no = #{member_no}
+<!-- 		<foreach collection="role_List" item="i"> -->
+<!-- 			and role_no = #{role_no} -->
+<!-- 		</foreach> -->
+	</delete>
+	
+	
+	
+	
+	
+</mapper>

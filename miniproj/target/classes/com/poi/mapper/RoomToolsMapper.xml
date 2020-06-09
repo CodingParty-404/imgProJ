@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="com.poi.mapper.RoomToolsMapper">
+  
+	<insert id="insert" parameterType="com.poi.vo.room.RoomToolsVO">
+		insert into tbl_roomtools (room, tool)
+		values
+		<foreach collection="toolList" item="i" separator=",">
+			(#{rno},#{i})
+		</foreach>
+	</insert>	
+  	
+  	<select id="getListJoined" parameterType="Long" resultType="string">
+		select name from tbl_roomtools rt, tbl_toolList_code tc
+		where rt.tool = tc.tlno
+		and rt.room = #{rno}
+  	</select>
+  
+  	<select id="getList" parameterType="Long" resultType="com.poi.vo.room.RoomToolsVO">
+  		select room "rno", tool from tbl_roomtools where room = #{rno}
+  	</select>
+  	
+  	<update id="update" parameterType="com.poi.vo.room.RoomToolsVO">
+  		update tbl_roomtools set tool = #{changeTool_no}
+		where room = #{rno}
+		and tool = #{tool}
+  	</update>
+  	
+  	<delete id="delete" parameterType="Long">
+  		delete from tbl_roomtools 
+  		where room = #{rno} <!-- Null 처리  -->
+  	</delete>
+  
+  </mapper>

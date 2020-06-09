@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.cp.mapper.FabricMapper">
+  	
+  	<insert id="insert" parameterType="com.cp.vo.FabricVO" >
+  		insert into fabric ( json )
+		values( #{json} )
+  	</insert>
+  	
+  	<select id="select" parameterType="Long" resultType="com.cp.vo.FabricVO">
+  		select json from fabric where fno = #{fno}
+  	</select>
+	
+  	
+  </mapper>
