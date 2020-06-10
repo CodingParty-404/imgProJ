@@ -1,7 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org"></html>
 
 <!DOCTYPE html>
 <html>
@@ -130,22 +127,7 @@
 		})
 		$("#toSVG").click(function() {
 			console.log(canvas2.toSVG());
-			var url = canvas2.toSVG();
-// 			var url = canvas2.toSVG();
-// 			var xhr = new XMLHttpRequest();
-// 			xhr.onreadystatechange = function() {
-// 				var xmlDoc = canvas2.toSVG();
-// 			}
-// 			xhr.open("GET","BOOKS.xml", true)
-// 			xhr.send();
-			
-// 			document.createElement('a').attr("href","url").click();
-// 			console.log(typeof(canvas2.toSVG()))
-// 			var $aTag =  $(document.createElement('a'));
-// 			$aTag.download = "hello.xml";
-			
-// 			console.log($aTag.attr("href",url).get(0).click());
-			
+			var url = canvas2.toSVG();			
 		});
 		
 		
