@@ -7,9 +7,18 @@
     <title>Document</title>
 </head>
 <body>
-    <canvas id="canvas" width="400" height="400" style="border: 2px solid #000000">
-        [[${json}]]
-    </canvas>
+    <style>
+        .canvas-container{
+            display: inline-block;
+        }
+        .canvas{
+            border: 2px solid black;
+        }
+    </style>
+    <div id="canvasDiv">
+
+    </div>
+    
     <div>
         <input id="asd" type="text" th:value='${fVo.json}'>
         <button id="readJSON">readJSON</button>
@@ -19,12 +28,28 @@
 integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
 crossorigin="anonymous"></script>
 <script>
+    var fCanvas = new Array();
+window.onload = function(){
+    
+    var $CanvasDiv = $("#canvasDiv");
+    console.log($CanvasDiv);
+    var newCanvas = document.getElementById("newCanvas")
+    for (var i = 1; i <= 4; i++) {
+        console.log(i);
+        var str = "canvas"+i;
+        console.log($CanvasDiv.append("<canvas class ='canvas'></canvas>").children().eq(i-1).attr("id",str));
+        fCanvas.push(new fabric.Canvas(str,{width:400,height:400}));
+        console.log(fCanvas);
+    }
 
-var canvas = new fabric.Canvas('canvas');
+
+}
 
     $('#readJSON').click(function(){
-        canvas.loadFromJSON($('#asd').val());
+        fCanvas[0].loadFromJSON($('#asd').val());
+        console.log(fCanvas[0]);
     })
+
 </script>
     
 </body>
