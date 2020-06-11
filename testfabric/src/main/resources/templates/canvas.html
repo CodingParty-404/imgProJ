@@ -108,7 +108,7 @@
 		$("#tri").click(createTriangle);
 		$("#export").click(function(){
 			var $form = $("#form");
-			$form.append("<input name='fbno' value='1'>");
+			$form.append("<input name='fbno' value='30'>");
 			console.log($form);
 			$form.attr("action","/export").attr("method","post").submit();
 		});
@@ -132,8 +132,9 @@
 			console.log(this);
 		})
 		$("#toSVG").click(function() {
-			console.log(canvas2.toSVG());
-			var url = canvas2.toSVG();
+			console.log(canvas.toSVG());
+			// var url = canvas2.toSVG();
+
 // 			var url = canvas2.toSVG();
 // 			var xhr = new XMLHttpRequest();
 // 			xhr.onreadystatechange = function() {

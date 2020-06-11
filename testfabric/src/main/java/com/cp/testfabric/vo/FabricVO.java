@@ -11,5 +11,6 @@ public class FabricVO {
     private String json;
     private String svg;
     private LocalDateTime regdate , moddate;
+	
 
 }
