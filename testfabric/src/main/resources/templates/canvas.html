@@ -17,9 +17,10 @@
 		<button id='toJson'>toJson</button>
 		<button id='goCanvas'>goCanvas</button>
 		<button id='toSVG'>toSVG</button>
+		<button id='export'>Export</button>
 	</div>
 	<div>
-		<p id="pJSON">	<c:out value="${json}" />
+		<p>[[${svg}]]</p>
 	</div>
 
 	<form id="form" method="post">
@@ -105,6 +106,13 @@
 		$("#circle").click(createCircle);
 		$("#rect").click(createRect);
 		$("#tri").click(createTriangle);
+		$("#export").click(function(){
+			var $form = $("#form");
+			$form.append("<input name='fbno' value='1'>");
+			console.log($form);
+			$form.attr("action","/export").attr("method","post").submit();
+		});
+
 		$("#toJson").click(function() {
 			var $form = $("#form");
 			var obJSON = canvas.toJSON();
