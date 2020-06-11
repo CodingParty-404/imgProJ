@@ -16,19 +16,24 @@
 		<button id='tri'>tri</button>
 		<button id='toJson'>toJson</button>
 		<button id='goCanvas'>goCanvas</button>
-		<button id='toSVG'>toSVG</button>
+		<button id='SaveDataToDB'>SaveDataToDB</button>
+		<button id='GetDataFromDB'>GetDataFromDB</button>
+		<img id="png" src="/img/mickey.png">
+		<img id="svg" src="/img/a.svg">
+	</div>
+	<div>
+		<a id="goRead" href="/read?fbno=30">READ</a>
 	</div>
 	<div>
 		<p id="pJSON">	<c:out value="${json}" />
 	</div>
 
+	<!-- JSON, SVG 넣는 곳-->
 	<form id="form" method="post">
-		JSON <input id="json" name="json" type="text"><br>		
+		<input type="hidden" id="json" name="json">	
+		<input type="hidden" id="svg" name="svg">
 	</form>
-	<!--추가-->
-	<form id="form2" method="post">
-		SVG <input id="svg" name="svg" type="text">
-	</form>
+
 
 <script src="https://code.jquery.com/jquery-3.5.1.js"
 		integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
@@ -38,21 +43,32 @@
 <script>
 		var canvas = new fabric.Canvas('canvas');
 		var canvas2 = new fabric.Canvas('canvas2');
-		
+		$('#png').click(function(){
+			
+			var imgInstance = new fabric.Image(this, {
+  		left: 100,
+ 		 top: 100,
+  			angle: 0,
+  			opacity: 0.75,
+ 		 width:300,
+ 		 height:300
+			});
+			canvas.add(imgInstance); 
+		})
 		// 0609
 		// 이미지 스티커 추가
-		fabric.Image.fromURL('/img/mickey.png', function(img){
+		// fabric.Image.fromURL('/img/a.svg', function(img){
 			
-			img.scaleToWidth(200);
-			img.scaleToHeight(200);			
-			canvas.add(img);
+		// 	img.scaleToWidth(200);
+		// 	img.scaleToHeight(200);			
+		// 	canvas.add(img);
 			
-			// 애니메이션 효과
-			img.animate('left', '+=200', {
-				onChange: canvas.renderAll.bind(canvas),
-				duration: 1000,
-				easing: fabric.util.ease.easeOutBounce 
-			});
+		// 	// 애니메이션 효과
+		// 	img.animate('left', '+=200', {
+		// 		onChange: canvas.renderAll.bind(canvas),
+		// 		duration: 1000,
+		// 		easing: fabric.util.ease.easeOutBounce 
+		// 	});
 			
 			/* 각도 조절
 			img.animate('angle', '+=8', {
@@ -61,7 +77,7 @@
 			});
 			*/
 			
-		});
+		// });
 		
 		
 		// gif를 Image로 돌리려고 했더니 안되네
@@ -80,7 +96,7 @@
 		
 		// 텍스트 스티커1 추가
 		var text1 = new fabric.Text("Mamba Rules!!", {
-			fontfamily: "Comic Sans MS"
+			fontfamily: "Times New Roman"
 		});
 		canvas.add(text1);
 		
@@ -100,16 +116,13 @@
 		
 		
 		
-		
-		
-		
-		
-		
-		
+				
 		$("#circle").click(createCircle);
 		$("#rect").click(createRect);
 		$("#tri").click(createTriangle);
+
 		$("#toJson").click(function() {
+
 			var $form = $("#form");
 			var obJSON = canvas.toJSON();
 
@@ -129,57 +142,59 @@
 			console.log();
 			console.log(this);
 		})
-		$("#toSVG").click(function() {
+		$("#SaveDataToDB").click(function() {
 
-			var $form = $("#form2");
-			console.log("svg:" + canvas2.toSVG());
-			var objSVG = canvas2.toSVG();
+			var $form = $("#form");
+
+			// JSON 처리
+			var obJSON = canvas.toJSON();
+			canvas2.loadFromJSON(obJSON);
+			console.log(JSON.stringify(obJSON));
+
+			// SVG 처리
+			var obSVG = canvas.toSVG();
+			console.log("svg:" + obSVG);
+			console.log(typeof(objSVG)); // 이미 String임
 			// 콘솔에 찍히는 svg는
 			// <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="400" height="400" viewBox="0 0 400 400" xml:space="preserve">
-			console.log(typeof(objSVG)); // 이미 String임
 			
-			// db에 넣으면 됨
-			$("#svg").val(objSVG);
-			$form.attr("action", "/canvasSVG");
+			// json은 직렬화해서 form으로 보냄
+			var j = $("#json").val(JSON.stringify(obJSON));
+			var s = $("#svg").val(obSVG);
+
+			// 그럼 controller에 있는 post 맵핑이 받고
+			// DB에 insert함
+			$form.append(j).append(s);
 			$form.submit();
 			
+		})
+		$("#GetDataFromDB").click(function(){
 
 
 
 
 
 
+			// select로 Database에 있는 데이터 불러오기
+			// text로 들어가있는 svg를 불러온다
+			// convert해서 화면에 보여준다
+			// This is how I embed SVG into HTML.
+
+			// <object id="svgImage" data="example.svg" type="image/svg+xml">
+			// </object>
+
+			// gotoCanvas 코드
+			// JSON.parse() 메소드는 인수로 전달받은 문자열을 자바스크립트 객체로 변환하여 반환합니다.
+			// $("#goCanvas").click(function() {
+			// canvas2.loadFromJSON(JSON.parse($('#pJSON').text()))
+			// console.log("goCanvs")
+			// console.log();
+			// console.log(this);
+		})
 
 
 
-			// 제이쿼리 svg to String
-			// var svgStringData = $(svgObject).html();
-			// var svgStringData = $(svgObject).text();
-			// console.log("text: " + svgStringData); 
-			
-			
-			
-			// var converter = new XMLSerializer();		
-			// var str = converter.serializeToString(svg);	
-			// console.log(str);
-
-
-// 			var url = canvas2.toSVG();
-// 			var xhr = new XMLHttpRequest();
-// 			xhr.onreadystatechange = function() {
-// 				var xmlDoc = canvas2.toSVG();
-// 			}
-// 			xhr.open("GET","BOOKS.xml", true)
-// 			xhr.send();
-			
-// 			document.createElement('a').attr("href","url").click();
-// 			console.log(typeof(canvas2.toSVG()))
-// 			var $aTag =  $(document.createElement('a'));
-// 			$aTag.download = "hello.xml";
-			
-// 			console.log($aTag.attr("href",url).get(0).click());
-			
-		});
+		
 		
 		
 

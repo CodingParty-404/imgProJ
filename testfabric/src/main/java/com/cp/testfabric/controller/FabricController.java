@@ -26,21 +26,23 @@ public class FabricController {
         
     }
 
-    // save버튼 누르면 db에 json이 저장되는 컨트롤러
+    // save버튼 누르면 db에 json과 SVG가 저장되는 컨트롤러
 	@PostMapping("/canvas")
 	public void canvasSave(FabricVO vo)
 	{
-		log.info("Post JSON.................................");
+		log.info("Post CANVAS.................................");
 		log.info(vo);
 		mapper.insert(vo);
 	}
 
-	@PostMapping("/canvasSVG")
-	public void SVGsave(FabricVO vo)
-	{
-		log.info("Post SVG.................................");
-		log.info(vo);
-		mapper.insertSVG(vo);
+	@GetMapping("/read")
+	public void read(FabricVO vo, Model model){
+
+		log.info("Post showData.................................");
+		FabricVO fVo = mapper.select(vo.getFbno());
+		
+		model.addAttribute("fVo", fVo);
+
 	}
     
 
