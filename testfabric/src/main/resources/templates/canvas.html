@@ -17,13 +17,15 @@
 		<button id='toJson'>toJson</button>
 		<button id='goCanvas'>goCanvas</button>
 		<button id='SaveDataToDB'>SaveDataToDB</button>
-		<button id='GetDataFromDB'>GetDataFromDB</button>
-		<img id="png" src="/img/mickey.png">
-		<img id="svg" src="/img/a.svg">
+		<button id='GetDataFromDB'>GetDataFromDB</button>\
+		<img id="imgPng" src="/img/mickey.png">
+		<img id="imgSvg" src="/img/a.svg">
 	</div>
+
 	<div>
 		<a id="goRead" href="/read?fbno=30">READ</a>
 	</div>
+
 	<div>
 		<p id="pJSON">	<c:out value="${json}" />
 	</div>
@@ -43,7 +45,8 @@
 <script>
 		var canvas = new fabric.Canvas('canvas');
 		var canvas2 = new fabric.Canvas('canvas2');
-		$('#png').click(function(){
+
+		$('#imgPng').click(function(){
 			
 			var imgInstance = new fabric.Image(this, {
   		left: 100,
@@ -55,20 +58,35 @@
 			});
 			canvas.add(imgInstance); 
 		})
+
+		$('#imgSvg').click(function(){
+			
+			var imgInstance = new fabric.Image(this, {
+  		left: 100,
+ 		 top: 100,
+  			angle: 0,
+  			opacity: 0.75,
+ 		 width:300,
+ 		 height:300
+			});
+			canvas.add(imgInstance); 
+		})
+
+
 		// 0609
 		// 이미지 스티커 추가
-		// fabric.Image.fromURL('/img/a.svg', function(img){
+		fabric.Image.fromURL('/img/mickey.png', function(img){
 			
-		// 	img.scaleToWidth(200);
-		// 	img.scaleToHeight(200);			
-		// 	canvas.add(img);
+			img.scaleToWidth(200);
+			img.scaleToHeight(200);			
+			canvas.add(img);
 			
-		// 	// 애니메이션 효과
-		// 	img.animate('left', '+=200', {
-		// 		onChange: canvas.renderAll.bind(canvas),
-		// 		duration: 1000,
-		// 		easing: fabric.util.ease.easeOutBounce 
-		// 	});
+			// 애니메이션 효과
+			img.animate('left', '+=200', {
+				onChange: canvas.renderAll.bind(canvas),
+				duration: 1000,
+				easing: fabric.util.ease.easeOutBounce 
+			});
 			
 			/* 각도 조절
 			img.animate('angle', '+=8', {
@@ -77,7 +95,7 @@
 			});
 			*/
 			
-		// });
+		});
 		
 		
 		// gif를 Image로 돌리려고 했더니 안되네
@@ -154,7 +172,7 @@
 			// SVG 처리
 			var obSVG = canvas.toSVG();
 			console.log("svg:" + obSVG);
-			console.log(typeof(objSVG)); // 이미 String임
+			console.log(typeof(obSVG)); // 이미 String임
 			// 콘솔에 찍히는 svg는
 			// <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="400" height="400" viewBox="0 0 400 400" xml:space="preserve">
 			
