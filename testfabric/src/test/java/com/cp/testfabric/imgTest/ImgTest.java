@@ -16,8 +16,8 @@ public class ImgTest {
     {
         ConvertCmd cmd = new ConvertCmd();
         IMOperation op = new IMOperation();
-        op.addImage("b.png");
-        op.addImage("a.svg");
+        op.addImage("child.svg");
+        op.addImage("a.png");
         cmd.run(op);
     }
 
