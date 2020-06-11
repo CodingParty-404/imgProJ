@@ -23,7 +23,11 @@
 	</div>
 
 	<form id="form" method="post">
-		<input id="json" name="json" type="text">
+		JSON <input id="json" name="json" type="text"><br>		
+	</form>
+	<!--추가-->
+	<form id="form2" method="post">
+		SVG <input id="svg" name="svg" type="text">
 	</form>
 
 <script src="https://code.jquery.com/jquery-3.5.1.js"
@@ -110,10 +114,12 @@
 			var obJSON = canvas.toJSON();
 
 			canvas2.loadFromJSON(obJSON);
-			console.log(JSON.parse(JSON.stringify(obJSON)));
+			console.log(JSON.stringify(obJSON));
 
+			// json을 직렬화해서 form으로 보냄
+			// 그럼 controller에 있는 post 맵핑이 받고
+			// DB에 insert함
 			$("#json").val(JSON.stringify(obJSON));
-
 			$form.submit();
 
 		})
@@ -124,8 +130,40 @@
 			console.log(this);
 		})
 		$("#toSVG").click(function() {
-			console.log(canvas2.toSVG());
-			var url = canvas2.toSVG();
+
+			var $form = $("#form2");
+			console.log("svg:" + canvas2.toSVG());
+			var objSVG = canvas2.toSVG();
+			// 콘솔에 찍히는 svg는
+			// <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="400" height="400" viewBox="0 0 400 400" xml:space="preserve">
+			console.log(typeof(objSVG)); // 이미 String임
+			
+			// db에 넣으면 됨
+			$("#svg").val(objSVG);
+			$form.attr("action", "/canvasSVG");
+			$form.submit();
+			
+
+
+
+
+
+
+
+
+
+			// 제이쿼리 svg to String
+			// var svgStringData = $(svgObject).html();
+			// var svgStringData = $(svgObject).text();
+			// console.log("text: " + svgStringData); 
+			
+			
+			
+			// var converter = new XMLSerializer();		
+			// var str = converter.serializeToString(svg);	
+			// console.log(str);
+
+
 // 			var url = canvas2.toSVG();
 // 			var xhr = new XMLHttpRequest();
 // 			xhr.onreadystatechange = function() {
