@@ -81,27 +81,27 @@
 
 		// 0609
 		// 이미지 스티커 추가
-		fabric.Image.fromURL('/img/mickey.png', function(img){
+		// fabric.Image.fromURL('/img/mickey.png', function(img){
 			
-			img.scaleToWidth(200);
-			img.scaleToHeight(200);			
-			canvas.add(img);
+		// 	img.scaleToWidth(200);
+		// 	img.scaleToHeight(200);			
+		// 	canvas.add(img);
 			
-			// 애니메이션 효과
-			img.animate('left', '+=200', {
-				onChange: canvas.renderAll.bind(canvas),
-				duration: 1000,
-				easing: fabric.util.ease.easeOutBounce 
-			});
+		// 	// 애니메이션 효과
+		// 	img.animate('left', '+=200', {
+		// 		onChange: canvas.renderAll.bind(canvas),
+		// 		duration: 1000,
+		// 		easing: fabric.util.ease.easeOutBounce 
+		// 	});
 			
-			/* 각도 조절
-			img.animate('angle', '+=8', {
-				onChange: canvas.renderAll.bind(canvas),
-				duration: 1000
-			});
-			*/
+		// 	/* 각도 조절
+		// 	img.animate('angle', '+=8', {
+		// 		onChange: canvas.renderAll.bind(canvas),
+		// 		duration: 1000
+		// 	});
+		// 	*/
 			
-		});
+		// });
 		
 		
 		// gif를 Image로 돌리려고 했더니 안되네
@@ -119,10 +119,10 @@
 		
 		
 		// 텍스트 스티커1 추가
-		var text1 = new fabric.Text("Mamba Rules!!", {
-			fontfamily: "Times New Roman"
-		});
-		canvas.add(text1);
+		// var text1 = new fabric.Text("Mamba Rules!!", {
+		// 	fontfamily: "Times New Roman"
+		// });
+		// canvas.add(text1);
 		
 		// 텍스트 스티커2 추가
 		var text2 = new fabric.Text("Mamba Rules!!", {
