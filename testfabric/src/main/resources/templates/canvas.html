@@ -21,9 +21,18 @@
 		<button id='toJson'>toJson</button>
 		<button id='goCanvas'>goCanvas</button>
 		<button id='SaveDataToDB'>SaveDataToDB</button>
-		<a href="/read?fbno=58"><button id='Read'>Read</button></a>
+		<button id='GetDataFromDB'>GetDataFromDB</button>
+		<img id="imgPng" src="/img/mickey.png">
+		<img id="imgSvg" src="/img/a.svg">
 	</div>
 
+	<div>
+		<a id="goRead" href="">READ</a>
+	</div>
+
+	<div>
+		<p>[[${svg}]]</p>
+	</div>
 
 	<!-- JSON, SVG 넣는 곳-->
 	<form id="form" method="post">
@@ -35,6 +44,40 @@
 <script>
 		var canvas = new fabric.Canvas('canvas');
 		var canvas2 = new fabric.Canvas('canvas2');
+
+		$("#goRead").click(function(e){
+			e.preventDefault();
+			$(document.createElement('form'))
+
+			console.log();
+		})
+
+		$('#imgPng').click(function(){
+			
+			var imgInstance = new fabric.Image(this, {
+			left: 100,
+			top: 100,
+				angle: 0,
+				opacity: 0.75,
+			width:300,
+ 		 height:300
+			});
+			canvas.add(imgInstance); 
+		})
+
+		$('#imgSvg').click(function(){
+			
+			var imgInstance = new fabric.Image(this, {
+  		left: 100,
+ 		 top: 100,
+  			angle: 0,
+  			opacity: 0.75,
+ 		 width:300,
+ 		 height:300
+			});
+			canvas.add(imgInstance); 
+		})
+
 
 		// 0609
 		// 이미지 스티커 추가
@@ -107,7 +150,7 @@
 			var $form = $("#form");
 			var obJSON = canvas.toJSON();
 
-			canvas.loadFromJSON(obJSON);
+			canvas2.loadFromJSON(obJSON);
 			console.log(JSON.stringify(obJSON));
 
 			// json을 직렬화해서 form으로 보냄
@@ -129,7 +172,7 @@
 
 			// JSON 처리
 			var obJSON = canvas.toJSON();
-			canvas.loadFromJSON(obJSON);
+			canvas2.loadFromJSON(obJSON);
 			console.log(JSON.stringify(obJSON));
 
 			// SVG 처리
@@ -140,17 +183,45 @@
 			// <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="400" height="400" viewBox="0 0 400 400" xml:space="preserve">
 			
 			// json은 직렬화해서 form으로 보냄
-			$("#json").val(JSON.stringify(obJSON));
-			$("#svg").val(obSVG);
+			var j = $("#json").val(JSON.stringify(obJSON));
+			var s = $("#svg").val(obSVG);
 
 			// 그럼 controller에 있는 post 맵핑이 받고
 			// DB에 insert함
+			$form.append(j).append(s);
 			$form.submit();
 			
 		})
+		$("#GetDataFromDB").click(function(){
+
+
+
+
+
+
+			// select로 Database에 있는 데이터 불러오기
+			// text로 들어가있는 svg를 불러온다
+			// convert해서 화면에 보여준다
+			// This is how I embed SVG into HTML.
+
+			// <object id="svgImage" data="example.svg" type="image/svg+xml">
+			// </object>
+
+			// gotoCanvas 코드
+			// JSON.parse() 메소드는 인수로 전달받은 문자열을 자바스크립트 객체로 변환하여 반환합니다.
+			// $("#goCanvas").click(function() {
+			// canvas2.loadFromJSON(JSON.parse($('#pJSON').text()))
+			// console.log("goCanvs")
+			// console.log();
+			// console.log(this);
+		})
+
 
 
 		
+		
+		
+
 		function createCircle() {
 			canvas.add(new fabric.Circle({
 				radius : 30,
