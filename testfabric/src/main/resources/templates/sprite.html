@@ -1,90 +1,105 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sprite</title>
-    <script src="/js/fabric.js"></script>
+    <script src="http://fabricjs.com/lib/fabric.js"></script>
     <script src="/js/sprite.js"></script>
 
 </head>
+
 <body>
     <canvas id="canvas" width="400" height="400" style="border: 2px solid #000000">
     </canvas>
+ 
     <button id='SaveDataToDB'>SaveDataToDB</button>
-    <a href="/read?fbno=61"><button id='Read'>Read</button></a>
+    <a href="/read?fbno=78"><button id='Read'>Read</button></a>
+
+    <form id="form">
+        <input id="json" name="json">
+    </form>
 
     <script src="https://code.jquery.com/jquery-3.5.1.js"
-		integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-        crossorigin="anonymous"></script>        
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script>
+        var fcanvas  = new fabric.Canvas('canvas'); 
+        // sprite 즉시 실행 함수
+        var text1 = new fabric.Text("Mamba Rules!!", {
+			fontfamily: "Times New Roman"
+		});
+        fcanvas.add(text1);
+        
+        (function () {
+             
 
-    // sprite 즉시 실행 함수
-    (function() {
-        var canvas = new fabric.Canvas('canvas');
+            fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
+            fabric.Object.prototype.transparentCorners = false;
 
-        fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
-        fabric.Object.prototype.transparentCorners = false;
-
-        for (var i = 0, len = 5; i < len; i++) {
-        for (var j = 0, jlen = 5; j < jlen; j++) {
-        fabric.Sprite.fromURL('/img/sprite.png', createSprite(i, j));
+            for (var i = 0, len = 5; i < len; i++) {
+                for (var j = 0, jlen = 5; j < jlen; j++) {
+                    fabric.Sprite.fromURL('/img/sprite.png', createSprite(i, j));
+                }
             }
-        }
 
-        function createSprite(i, j) {
-            return function(sprite) {
-                sprite.set({
-                left: i * 100 + 50,
-                top: j * 100 + 50,
-                angle: fabric.util.getRandomInt(-30, 30)
-                });
-            canvas.add(sprite);
-            setTimeout(function() {
-            sprite.set('dirty', true);
-            sprite.play();
-                }, fabric.util.getRandomInt(1, 10) * 100);
-            };
-        }
+            function createSprite(i, j) {
+                return function (sprite) {
+                    sprite.set({
+                        left: i * 100 + 50,
+                        top: j * 100 + 50,
+                        angle: fabric.util.getRandomInt(-30, 30)
+                    });
+                    fcanvas.add(sprite);
+                    setTimeout(function () {
+                        sprite.set('dirty', true);
+                        sprite.play();
+                    }, fabric.util.getRandomInt(1, 10) * 100);
+                };
+            }
 
-        (function render() {
-        canvas.renderAll();
-        fabric.util.requestAnimFrame(render);
-        })();
+            (function render() {
+                fcanvas.renderAll();
+                fabric.util.requestAnimFrame(render);
+            })();
 
 
-        // btn
-        // SaveDataToDB
+            // btn
+            // SaveDataToDB
+           
+
+        })(); // end of 즉시실행함수
+
         $("#SaveDataToDB").click(function () {
 
-var $form = $("#form");
+            console.log("Asdasdasdasd")
+            console.log(fcanvas);
+            console.log("dasdasdasdsad")
+            var $form = $("#form");
+            console.log($form);
+            // JSON 처리    
+            var obJSON = fcanvas.toJSON();
+            // canvas.loadFromJSON(obJSON);
+            console.log(obJSON);
 
-// JSON 처리
-var obJSON = canvas.toJSON();
-canvas.loadFromJSON(obJSON);
-console.log(JSON.stringify(obJSON));
+            for(var i =0; i < obJSON.Objects.length(); i++)
+            {
+                console.log(i);
+            }
 
-// SVG 처리
-var obSVG = canvas.toSVG();
-console.log("svg:" + obSVG);
-console.log(typeof (obSVG)); // 이미 String임
+            // json은 직렬화해서 form으로 보냄
+            $("#json").val(JSON.stringify(obJSON));
 
-// json은 직렬화해서 form으로 보냄
-$("#json").val(JSON.stringify(obJSON));
-$("#svg").val(obSVG);
+            // console.log($("#json").val(JSON.stringify(obJSON)).val());
+            // 그럼 controller에 있는 post 맵핑이 받고
+            // DB에 insert함
+            // $form.attr("action","/sprite").attr("method","post").submit();
 
-// 그럼 controller에 있는 post 맵핑이 받고
-// DB에 insert함
-$form.submit();
-
-})
-
-    })(); // end of 즉시실행함수
+        })
 
 
+    </script>
 
-
-</script>
-    
 </body>
+
 </html>

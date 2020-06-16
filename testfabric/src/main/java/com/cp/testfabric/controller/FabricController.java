@@ -51,9 +51,17 @@ public class FabricController {
 	@GetMapping("/sprite")
     public void sprite(Model model)
     {
-        //String json = mapper.selectJSON(1L).getJson();
-		//model.addAttribute("json", json);
+        // String json = mapper.selectJSON(1L).getJson();
+		// model.addAttribute("json", json);
         
+	}
+	@PostMapping("/sprite")
+	public void sprite(FabricVO vo)
+	{
+		log.info("Sprite Post ...........................");
+		log.info(vo);
+		mapper.insert(vo);
+		
 	}
 	
 	@GetMapping("/human")
