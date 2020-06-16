@@ -1,5 +1,7 @@
 package com.cp.testfabric.controller;
 
+import java.util.List;
+
 import com.cp.testfabric.mapper.FabricMapper;
 import com.cp.testfabric.vo.FabricVO;
 
@@ -38,12 +40,13 @@ public class FabricController {
 
 
 	@GetMapping("/read")
-	public void read(FabricVO vo, Model model){
+	public void read(Model model){
 
 		log.info("Post showData.................................");
-		FabricVO fVo = mapper.select(vo.getFbno());
 		
-		model.addAttribute("fVo", fVo);
+		List<FabricVO> list = mapper.getList();
+		log.info(list);
+		// model.addAttribute("fVo", fVo);
 
 	}
 

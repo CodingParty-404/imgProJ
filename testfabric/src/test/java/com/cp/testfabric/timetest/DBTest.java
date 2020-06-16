@@ -1,7 +1,7 @@
 package com.cp.testfabric.timetest;
 
 import com.cp.testfabric.mapper.FabricMapper;
-
+import com.cp.testfabric.vo.FabricVO;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,12 @@ public class DBTest {
     @Test
     public void timeTest(){
         mapper.timeSelect();
+    }
+
+    @Test
+    public void selectTest() {
+        FabricVO vo = mapper.selectOne(1L);
+        System.out.println(vo);
     }
 
     // 테이블명 tbl_fabric
