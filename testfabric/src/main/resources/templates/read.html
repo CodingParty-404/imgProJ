@@ -1,31 +1,82 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <script src="/js/fabric.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-    <canvas id="canvas" width="400" height="400" style="border: 2px solid #000000">
+    <canvas id="canvas" width="1000" height="1000" style="border: 2px solid #000000">
         [[${json}]]
     </canvas>
     <div>
         <input id="asd" type="text" th:value='${fVo.json}'>
         <button id="readJSON">readJSON</button>
     </div>
-    
-<script src="https://code.jquery.com/jquery-3.5.1.js"
-integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-crossorigin="anonymous"></script>
-<script>
 
-var canvas = new fabric.Canvas('canvas');
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script>
+        var URL = null;
+        var canvas = new fabric.Canvas('canvas');
 
-    $('#readJSON').click(function(){
-        canvas.loadFromJSON($('#asd').val());
-    })
-</script>
-    
+        $('#readJSON').click(function () {
+            var $json = $('#asd')
+            var json = JSON.parse($json.val());
+            URL = json.objects[0].src;
+            canWalk(URL, positions);
+            canvas.loadFromJSON($json.val());
+        })
+    </script>
+
+    <script>    
+        var positions = {
+            topSteps: 2,
+            leftSteps: 4
+        };
+        function canWalk(URL, positions) {
+            var myImage = new Image();
+            myImage.src = URL;
+
+            myImage.onload = function () {
+                var topStep = myImage.naturalHeight / positions.topSteps;
+                var leftStep = myImage.naturalWidth / positions.leftSteps;
+
+                var docCanvas = document.getElementById('canvas');
+                docCanvas.height = 200;
+                docCanvas.width = 200;
+                fabricImageFromURL(0, 0);
+                var y = 0;
+                var x = 0;
+                setInterval(function () {
+                    if (x == positions.leftSteps) {
+                        x = 0;
+                        y++;
+                        if (y == positions.topSteps) {
+                            y = 0;
+                        }
+                    }
+                    fabricImageFromURL(-y * topStep, -x * leftStep);
+                    x++;
+                }, 100);
+            };
+        }
+        function fabricImageFromURL(top, left) {
+            console.log(top, left);
+            fabric.Image.fromURL(URL, function (oImg) {
+                oImg.set('left', left).set('top', top);
+                oImg.hasControls = false;
+                oImg.hasBorders = false;
+                oImg.selectable = false;
+                canvas.add(oImg);
+                canvas.renderAll();
+            }, { "left": 0, "top": 0, "scaleX": 1, "scaleY": 1 });
+        }
+    </script>
+
 </body>
+
 </html>
