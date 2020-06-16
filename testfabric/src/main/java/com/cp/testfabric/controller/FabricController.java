@@ -46,7 +46,7 @@ public class FabricController {
 		
 		List<FabricVO> list = mapper.getList();
 		log.info(list);
-		// model.addAttribute("fVo", fVo);
+		model.addAttribute("list", list);
 
 	}
 

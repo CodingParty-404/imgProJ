@@ -2,6 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <script src="/js/jszip.min.js"></script>
+    <script src="/js/FileSaver.js"></script>
     <script src="/js/fabric.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,22 +15,68 @@
         <!-- [[${json}]] -->
     </canvas>
     <div>
-        <input id="asd" type="text" th:value='${fVo.json}'>
-        <button id="readJSON">readJSON</button>
+        <input id="json2" class="canvasData" type="hidden" th:value='${list.get(1).getJson()}'>
+        <input id="json3" class="canvasData" type="hidden" th:value='${list.get(2).getJson()}'>
+        <input id="json1" class="canvasData" type="hidden" th:value='${list.get(0).getJson()}'>
+        <input id="json4" class="canvasData" type="hidden" th:value='${list.get(3).getJson()}'>
+        <input id="json5" class="canvasData" type="hidden" th:value='${list.get(4).getJson()}'>
+        <input id="json6" class="canvasData" type="hidden" th:value='${list.get(5).getJson()}'>
+        
+        
+        <button id="export">Export</button>
+        <button id="prev">prev</button>
+        <button id="next">next</button>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.js"
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script>
-        var canvas = new fabric.Canvas('canvas');
+        var canvas = new fabric.StaticCanvas('canvas');
+        var index = 1;
+        canvas.loadFromJSON($('#json1').val());
 
-        console.log(canvas);
+        $('#export').click(function () {
 
-        $('#readJSON').click(function () {
-            var $json = $('#asd')
-            var json = JSON.parse($json.val());
-            // canvas.loadFromJSON($json.val());
-            canvas.toJSON();
+            var canvasArr = document.getElementsByClassName("canvasData");
+            var zip = new JSZip();
+            // console.log(zip);
+            for(var i = 0 ; i<canvasArr.length;i++){
+                // console.log(canvasArr[i].defaultValue)
+                canvas.loadFromJSON(canvasArr[i].defaultValue)
+                canvas.getElement().toBlob(function(blob){
+                    // console.log(blob);
+                    var fileName = "albam"+i+".png";
+                    // var file = new File(["foo"],"foo.txt",{type:"text/plain",})
+                    // console.log(file);
+                    // zip.file("asdasd.txt",file);
+                    // zip.file(fileName,new File(blob, fileName,{ type: "image/png"}));
+                    saveAs(blob,fileName);
+                });
+                // if(i = canvasArr.length-1){
+                //     zip.generateAsync({type:"blob"})
+                //     .then(function(blob){
+                //         saveAs(blob,"hello.zip")
+                //     })
+                // }
+            }
+
+            console.log(zip);
+        });
+
+
+        $("#prev").click(function(){
+            var str ="#json" + index;
+            canvas.loadFromJSON($(str).val());
+            if(index > 0)
+                index--;
+            console.log( index);
+        })
+        $("#next").click(function(){
+            var str ="#json" + index;
+            canvas.loadFromJSON($(str).val());
+            if(index < 6)
+                index++;
+            console.log( index);
         })
     </script>
 

@@ -9,4 +9,10 @@
       <select id="selectOne" parameterType="Long" resultType="com.cp.testfabric.vo.FabricVO">
         select json from tbl_fabric where fbno = #{fbno}
       </select>
+
+      <select id="getList" resultType="com.cp.testfabric.vo.FabricVO" >
+        select * from tbl_fabric where fbno in 
+        (1,2,3,4,5,6)
+      </select>
+
   </mapper>

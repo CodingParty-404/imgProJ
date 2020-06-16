@@ -26,6 +26,13 @@ public class DBTest {
         System.out.println(vo);
     }
 
+    @Test
+    public void getListTest() {
+        // Integer[] arr ={1,2,3,4,5,6};
+
+        mapper.getList().forEach(vo->System.out.println(vo));
+    } 
+
     // 테이블명 tbl_fabric
     // 본격 테스트
     // 1. insert 테스트
