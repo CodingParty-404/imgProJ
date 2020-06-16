@@ -35,6 +35,8 @@ public class FabricController {
 		mapper.insert(vo);
 	}
 
+
+
 	@GetMapping("/read")
 	public void read(FabricVO vo, Model model){
 
@@ -44,6 +46,33 @@ public class FabricController {
 		model.addAttribute("fVo", fVo);
 
 	}
+
+
+	@GetMapping("/sprite")
+    public void sprite(Model model)
+    {
+        //String json = mapper.selectJSON(1L).getJson();
+		//model.addAttribute("json", json);
+        
+	}
+	
+	@GetMapping("/human")
+    public void human(Model model)
+    {
+        //String json = mapper.selectJSON(1L).getJson();
+		//model.addAttribute("json", json);
+        
+	}
+	
+
+	@PostMapping("/human")
+    public void humanSave(FabricVO vo)
+    {
+		log.info("Post HUMAN.................................");
+		log.info(vo);
+		mapper.insert(vo);       
+    }
+
     
 
 }
