@@ -11,11 +11,12 @@
 <body>
     <canvas id="canvas" width="400" height="400" style="border: 2px solid #000000">
     </canvas>
+    <button id='SaveDataToDB'>SaveDataToDB</button>
+    <a href="/read?fbno=61"><button id='Read'>Read</button></a>
 
     <script src="https://code.jquery.com/jquery-3.5.1.js"
 		integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-        crossorigin="anonymous"></script>
-        
+        crossorigin="anonymous"></script>        
     <script>
 
     // sprite 즉시 실행 함수
@@ -51,9 +52,36 @@
         fabric.util.requestAnimFrame(render);
         })();
 
+
+        // btn
+        // SaveDataToDB
+        $("#SaveDataToDB").click(function () {
+
+var $form = $("#form");
+
+// JSON 처리
+var obJSON = canvas.toJSON();
+canvas.loadFromJSON(obJSON);
+console.log(JSON.stringify(obJSON));
+
+// SVG 처리
+var obSVG = canvas.toSVG();
+console.log("svg:" + obSVG);
+console.log(typeof (obSVG)); // 이미 String임
+
+// json은 직렬화해서 form으로 보냄
+$("#json").val(JSON.stringify(obJSON));
+$("#svg").val(obSVG);
+
+// 그럼 controller에 있는 post 맵핑이 받고
+// DB에 insert함
+$form.submit();
+
+})
+
     })(); // end of 즉시실행함수
 
-    
+
 
 
 </script>
