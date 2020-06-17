@@ -22,7 +22,11 @@
         });
 
         form.addEventListener('awesome', e => console.log(e.detail.text()));
-        textarea.addEventListener('input', e => e.target.dispatchEvent(eventAwesome));
+        textarea.addEventListener('input', function(e){
+            var a = e.target.dispatchEvent(eventAwesome);
+            console.log(a)
+            console.log(e);
+        });
 
 
     </script>

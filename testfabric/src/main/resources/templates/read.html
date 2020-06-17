@@ -22,9 +22,9 @@
         <!-- [[${json}]] -->
     </canvas>
 
-    
 
-    <div>
+
+    <div id="main">
         <input id="json1" class="canvasData" type="hidden" th:value='${list.get(0).getJson()}'>
         <input id="json2" class="canvasData" type="hidden" th:value='${list.get(1).getJson()}'>
         <input id="json3" class="canvasData" type="hidden" th:value='${list.get(2).getJson()}'>
@@ -43,15 +43,15 @@
     </div>
 
     <div style="display: none;">
-        <canvas id="preCan1" class="prepared" ></canvas>
-        <canvas id="preCan2" class="prepared" ></canvas>
-        <canvas id="preCan3" class="prepared" ></canvas>
-        <canvas id="preCan4" class="prepared" ></canvas>
-        <canvas id="preCan5" class="prepared" ></canvas>
-        <canvas id="preCan6" class="prepared" ></canvas>
-        <canvas id="preCan7" class="prepared" ></canvas>
-        <canvas id="preCan8" class="prepared" ></canvas>
-        <canvas id="preCan9" class="prepared" ></canvas>
+        <canvas id="preCan1" class="prepared"></canvas>
+        <canvas id="preCan2" class="prepared"></canvas>
+        <canvas id="preCan3" class="prepared"></canvas>
+        <canvas id="preCan4" class="prepared"></canvas>
+        <canvas id="preCan5" class="prepared"></canvas>
+        <canvas id="preCan6" class="prepared"></canvas>
+        <canvas id="preCan7" class="prepared"></canvas>
+        <canvas id="preCan8" class="prepared"></canvas>
+        <canvas id="preCan9" class="prepared"></canvas>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.js"
@@ -63,49 +63,74 @@
         var canvasArr = document.getElementsByClassName("canvasData");
         var index = 1;
 
+        for (let i = 0; i < preCanvas.length; i++) {
+            let str = 'preCan' + (i + 1);
+            // console.log(str);
+            preFCanvas.push(new fabric.StaticCanvas(str, { width: 1920, height: 1080 }))
+            preFCanvas[i].loadFromJSON(canvasArr[i].defaultValue)
+        }
         canvas.loadFromJSON($('#json1').val());
 
-        function blobsFun(){
+        function zipFunc(callback) {
+            console.log("zipFUNC")
+            var fileName =[];
+            var zip = new JSZip();
             var blobs = [];
-            for (let i = 0; i < canvasArr.length; i++) {
-                preFCanvas[i].getElement().toBlob(function (blob) {
-                    blobs.push(blob);
-                });
-            }
-            return blob;
-        }
-
-        function fileNamesFun(){
-            var fileName = [];
-            for (let i = 0; i < canvasArr.length; i++) {
+            for (let i = 0; i < preFCanvas.length; i++) {
                 fileName[i] =
                     function (i) {
                         return "albam" + i + ".png";
                     }(i)
-            }
-            return fileName;
+
+            preFCanvas[i].getElement().toBlob(function (blob) {
+                zip.file("albam" + i + ".png", new File([blob], "albam" + i + ".png", { type: "image/png", }));
+            })
         }
-
-
-        var cEvent = new CustomEvent('cus',{
-            detail: {
-                blobs: blobsFun,
-                fileNames: fileNamesFun
-            }
-        })
-
-
-        for(let i = 0 ; i<preCanvas.length; i++)
-        {
-            let str = 'preCan'+(i+1);
-            // console.log(str);
-            preFCanvas.push( new fabric.StaticCanvas(str,{width: 1920, height: 1080}) )
-            preFCanvas[i].loadFromJSON(canvasArr[i].defaultValue)
-            console.log(preFCanvas);
+        callback(zip);
+        // return zip;
+    }
+    const cEvent = new CustomEvent('cus', {
+        // bubbles: true,
+        detail: {
+            zips: zipFunc,
         }
+    })
 
-        $('#export').click(function(){
+        window.addEventListener("cus", function(e){
+            console.log("AAAAA");
+            console.log(e);
+            e.detail.zips(function(result){
+                console.log("finish")
+                console.log(result)
+                result.generateAsync({type:"blob"})
+                    .then(function(content){
+                        console.log(content)
+                        // saveAs(content,"asdasd.zip")
+                    })
+            })
+            
 
+        },false);
+
+
+        document.getElementById('export').addEventListener("click", function (e) {
+
+            setTimeout(function(){
+                console.log("dispatch")
+                window.dispatchEvent(cEvent);
+            },2000);
+            // document.getElementById('main').addEventListener("cus", function (e) {
+
+            //     let det = e.detail;
+            //     console.log(e.detail)
+
+            //     det.zips.generateAsync({ type: "blob" })
+            //         .then(function (content) {
+            //             saveAs(content, "example.zip");
+            //         });
+
+            // })
+            // this.dispatchEvent(cEvent);
         })
 
         // $('#export').click(function () {
