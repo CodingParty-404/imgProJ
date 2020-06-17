@@ -104,11 +104,36 @@ public class FabricController {
         
 	}
 
+
 	@GetMapping("/make3")
     public void make3(Model model)
     {
         
 	}
+
+
+	@PostMapping("/make3")
+    public void make3Save(FabricVO vo)
+    {
+		log.info("Post MAKE.................................");
+		log.info(vo);
+		mapper.insert(vo);        
+	}
+
+	@GetMapping("/make4")
+    public void make4(Model model)
+    {
+        
+	}
+
+	@PostMapping("/make4")
+    public void make4Save(FabricVO vo)
+    {
+		log.info("Post MAKE.................................");
+		log.info(vo);
+		mapper.insert(vo);        
+	}
+
 
 	@GetMapping("/index")
     public void index(Model model)
@@ -121,6 +146,21 @@ public class FabricController {
     {
         
 	}
+
+	@GetMapping("/colorpick")
+    public void colorpick(Model model)
+    {
+        
+	}
+
+
+	@GetMapping("/freedraw")
+    public void freedraw(Model model)
+    {
+        
+	}
+
+
 
 
 

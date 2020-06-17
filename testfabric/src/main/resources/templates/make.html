@@ -158,7 +158,8 @@
 
         .mickey,
         .mini,
-        .donald {
+        .donald,
+        .daisy {
             box-sizing: border-box;
         }
 
@@ -233,6 +234,9 @@
                     <div class="donald">
                         <img src="/img/duck3.png" id="donald">
                     </div>
+                    <div class="daisy">
+                        <img src="/img/daisy.png" id="daisy">
+                    </div>
                 </div>
                 <div class="text">
                     <div class="input">
@@ -277,12 +281,17 @@
         $('#mini').click(createMini);
         // 도널드 버튼 클릭 시 아래 함수 동작
         $('#donald').click(createDonald);
+        // 데이지 버튼 클릭 시 아래 함수 동작
+        $('#daisy').click(createDaisy);
 
         // 사진 넣기
         fabric.Image.fromURL('/img/IMG_6850.jpg', function (img) {
             img.scaleToWidth(300);
             img.scaleToHeight(250);
-            canvas1.add(img);
+            canvas1.add(img.set({
+                    left: 230,
+                    top: 160
+                }));
         })
 
 
@@ -315,6 +324,18 @@
                 canvas1.add(img.set({
                     left: 200,
                     top: 200
+                }));
+            })
+        }
+
+        // 캔버스에 데이지 넣는 함수
+        function createDaisy() {
+            fabric.Image.fromURL('/img/daisy.png', function (img) {
+                img.scaleToWidth(100);
+                img.scaleToHeight(120);
+                canvas1.add(img.set({
+                    left: 300,
+                    top: 300
                 }));
             })
         }
@@ -354,6 +375,8 @@
             console.log(canvas1);
         });
 
+
+        // DB에 저장되는 버튼
         $("#SaveDataToDB").click(function () {
 
             var $form = $("#form");
