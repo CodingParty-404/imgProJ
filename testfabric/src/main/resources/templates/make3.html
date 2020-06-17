@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+    <title>Document</title>
+    <script src="/js/fabric.js"></script>
+</head>
+
+<body>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            font-family: consolas;
+            font-size: 12px;
+        }
+
+        .canvas-wrapper {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+        }
+
+        .canvas-container {
+            float: left;
+        }
+
+        #c0 {
+            width: calc(50% - 2px);
+            border-right: 2px dashed darkgray;
+        }
+
+        #c1 {
+            width: calc(50% - 2px);
+        }
+
+        .pane-text {
+            position: fixed;
+            top: 12px;
+            width: 45%;
+            text-align: center;
+            font-size: 14pt;
+        }
+
+        #left-pane-text {
+            left: 0;
+        }
+
+        #right-pane-text {
+            right: 0;
+        }
+    </style>
+
+    <div class="canvas-wrapper">
+        <canvas id="c0"></canvas>
+        <canvas id="c1"></canvas>
+    </div>
+    <div id="left-pane-text" class="pane-text">Canvas #1</div>
+    <div id="right-pane-text" class="pane-text">Canvas #2</div>
+
+
+
+    <script>
+        //
+        //create two canvases
+        var canvas0El = document.getElementById("c0");
+        canvas0El.width = canvas0El.offsetWidth;
+        canvas0El.height = canvas0El.parentElement.offsetHeight;
+
+        var canvas1El = document.getElementById("c1");
+        canvas1El.width = canvas1El.offsetWidth;
+        canvas1El.height = canvas1El.parentElement.offsetHeight;
+
+        var canvas0 = new fabric.Canvas('c0');
+        canvas0.setBackgroundColor('rgba(19, 19, 19, 0.25)');
+        canvas0.renderAll();
+
+        var canvas1 = new fabric.Canvas('c1');
+        canvas1.setBackgroundColor('rgba(92, 18, 18, 0.25)');
+        canvas1.renderAll();
+
+        // add loaded image on left canvas
+        var onImageLoaded = function (oImg) {
+            oImg.originX = "center";
+            oImg.originY = "center";
+
+            oImg.left = this.x;
+            oImg.top = this.y;
+
+            canvas0.add(oImg);
+            oImg.canvas = canvas0;
+            imgArrow = oImg;
+        };
+
+        var config = { crossOrigin: 'anonymous' };
+
+        
+        var url0 = "img/mickey.png";
+        var url1 = "img/mini.png";
+        var url2 = "img/duck3.png";
+
+        // load some images
+        // 스티커당 5개씩 로딩해둘까
+        // 그럼 new canvas로 옮겨도 old canvas에 스티커 여분이 남아있다
+        for(var i = 0; i < 5; i++){
+        fabric.Image.fromURL(url0, onImageLoaded.bind({ x: 156, y: 196 }), config);
+        fabric.Image.fromURL(url1, onImageLoaded.bind({ x: 506, y: 4 * 96 }), config);
+        fabric.Image.fromURL(url2, onImageLoaded.bind({ x: 206, y: 5 * 96 }), config);
+        }
+        
+
+        //
+        var onObjectMoving = function (p) {
+            var viewport = p.target.canvas.calcViewportBoundaries();
+
+            if (p.target.canvas === canvas0) {
+                if (p.target.left > viewport.br.x) {
+                    console.log("Migrate: left -> center");
+                    migrateItem(canvas0, canvas1, p.target);
+                    return;
+                }
+            }
+            if (p.target.canvas === canvas1) {
+                if (p.target.left < viewport.tl.x) {
+                    console.log("Migrate: center -> left");
+                    migrateItem(canvas1, canvas0, p.target);
+                    return;
+                }
+            }
+        };
+
+        canvas0.on("object:moving", onObjectMoving);
+        canvas1.on("object:moving", onObjectMoving);
+
+
+        //
+        var migrateItem = function (fromCanvas, toCanvas, pendingImage) {
+            // Just drop image from old canvas
+            // 지우지 않고 옮기기만 하면 old canvas와 new canvas 경계선에 걸려있음
+            fromCanvas.remove(pendingImage);
+
+            // We're going to trick fabric.js,
+            // so we keep internal transforms of the source canvas, 
+            // in order to inject it into destination canvas.
+            var pendingTransform = fromCanvas._currentTransform;
+            fromCanvas._currentTransform = null;
+
+            // Make shortcuts for fabric.util.removeListener and fabric.util.addListener
+            var removeListener = fabric.util.removeListener;
+            var addListener = fabric.util.addListener;
+
+            // Re-arrange subscriptions for source canvas
+            {
+                removeListener(fabric.document, 'mouseup', fromCanvas._onMouseUp);
+                removeListener(fabric.document, 'touchend', fromCanvas._onMouseUp);
+
+                removeListener(fabric.document, 'mousemove', fromCanvas._onMouseMove);
+                removeListener(fabric.document, 'touchmove', fromCanvas._onMouseMove);
+
+                addListener(fromCanvas.upperCanvasEl, 'mousemove', fromCanvas._onMouseMove);
+                addListener(fromCanvas.upperCanvasEl, 'touchmove', fromCanvas._onMouseMove, {
+                    passive: false
+                });
+
+                if (isTouchDevice) {
+                    // Wait 500ms before rebinding mousedown to prevent double triggers
+                    // from touch devices
+                    var _this = fromCanvas;
+                    setTimeout(function () {
+                        addListener(_this.upperCanvasEl, 'mousedown', _this._onMouseDown);
+                    }, 500);
+                }
+            }
+
+            // Re-arrange subscriptions for destination canvas
+            {
+                addListener(fabric.document, 'touchend', toCanvas._onMouseUp, {
+                    passive: false
+                });
+                addListener(fabric.document, 'touchmove', toCanvas._onMouseMove, {
+                    passive: false
+                });
+
+                removeListener(toCanvas.upperCanvasEl, 'mousemove', toCanvas._onMouseMove);
+                removeListener(toCanvas.upperCanvasEl, 'touchmove', toCanvas._onMouseMove);
+
+                // isTouchDevice
+                var isTouchDevice = 'ontouchstart' in window || navigator.msMaxTouchPoints;
+
+                if (isTouchDevice) {
+                    // Unbind mousedown to prevent double triggers from touch devices
+                    removeListener(toCanvas.upperCanvasEl, 'mousedown', toCanvas._onMouseDown);
+                } else {
+                    addListener(fabric.document, 'mouseup', toCanvas._onMouseUp);
+                    addListener(fabric.document, 'mousemove', toCanvas._onMouseMove);
+                }
+            }
+
+            // We need this timer, because we want Fabric.js to complete pending render
+            // before we inject, because it causes some unpleasant image jumping.
+            setTimeout(function () {
+                // Add image to destination canvas,
+                pendingImage.scaleX *= -1;
+                pendingImage.canvas = toCanvas;
+                pendingImage.migrated = true;
+                toCanvas.add(pendingImage);
+
+                // and inject transforms from source canvas
+                toCanvas._currentTransform = pendingTransform;
+
+                // as we have mirrored the image, we mirror transforms too
+                toCanvas._currentTransform.scaleX *= -1;
+                toCanvas._currentTransform.original.scaleX *= -1;
+
+                // finally don't forget to make pasted object selected
+                toCanvas.setActiveObject(pendingImage);
+            }, 10);
+        };
+    </script>
+</body>
+
+</html>
