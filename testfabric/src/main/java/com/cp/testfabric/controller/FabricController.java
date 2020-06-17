@@ -45,7 +45,7 @@ public class FabricController {
 		log.info("Post showData.................................");
 		
 		List<FabricVO> list = mapper.getList();
-		log.info(list);
+		// log.info(list);
 		model.addAttribute("list", list);
 
 	}
@@ -84,6 +84,11 @@ public class FabricController {
 		mapper.insert(vo);       
     }
 
+	@GetMapping("/test")
+	public void testPage()
+	{
+		
+	}
     
 
 }
