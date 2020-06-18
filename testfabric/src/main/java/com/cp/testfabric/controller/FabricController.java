@@ -82,7 +82,98 @@ public class FabricController {
 		log.info("Post HUMAN.................................");
 		log.info(vo);
 		mapper.insert(vo);       
-    }
+	}
+	
+	@PostMapping("/sprite")
+    public void spriteSave(FabricVO vo)
+    {
+		log.info("Post SPRITE.................................");
+		log.info(vo);
+		mapper.insert(vo);       
+	}
+	
+
+	@GetMapping("/make")
+    public void make(Model model)
+    {
+        
+	}
+
+	@PostMapping("/make")
+	public void makeSave(FabricVO vo)
+	{
+		log.info("Post MAKE.................................");
+		log.info(vo);
+		mapper.insert(vo);
+	}
+
+
+
+	@GetMapping("/make2")
+    public void make2(Model model)
+    {
+        
+	}
+
+
+	@GetMapping("/make3")
+    public void make3(Model model)
+    {
+        
+	}
+
+
+	@PostMapping("/make3")
+    public void make3Save(FabricVO vo)
+    {
+		log.info("Post MAKE.................................");
+		log.info(vo);
+		mapper.insert(vo);        
+	}
+
+	@GetMapping("/make4")
+    public void make4(Model model)
+    {
+        
+	}
+
+	@PostMapping("/make4")
+    public void make4Save(FabricVO vo)
+    {
+		log.info("Post MAKE.................................");
+		log.info(vo);
+		mapper.insert(vo);        
+	}
+
+
+	@GetMapping("/index")
+    public void index(Model model)
+    {
+        
+	}
+
+	@GetMapping("/customLogin")
+    public void customLogin(Model model)
+    {
+        
+	}
+
+	@GetMapping("/colorpick")
+    public void colorpick(Model model)
+    {
+        
+	}
+
+
+	@GetMapping("/freedraw")
+    public void freedraw(Model model)
+    {
+        
+	}
+
+
+
+
 
 	@GetMapping("/test")
 	public void testPage()
