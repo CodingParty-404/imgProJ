@@ -51,21 +51,21 @@ public class FabricController {
 	}
 
 
-	@GetMapping("/sprite")
-    public void sprite(Model model)
-    {
-        // String json = mapper.selectJSON(1L).getJson();
-		// model.addAttribute("json", json);
+	// @GetMapping("/sprite")
+    // public void sprite(Model model)
+    // {
+    //     // String json = mapper.selectJSON(1L).getJson();
+	// 	// model.addAttribute("json", json);
         
-	}
-	@PostMapping("/sprite")
-	public void sprite(FabricVO vo)
-	{
-		log.info("Sprite Post ...........................");
-		log.info(vo);
-		mapper.insert(vo);
+	// }
+	// @PostMapping("/sprite")
+	// public void sprite(FabricVO vo)
+	// {
+	// 	log.info("Sprite Post ...........................");
+	// 	log.info(vo);
+	// 	mapper.insert(vo);
 		
-	}
+	// }
 	
 	@GetMapping("/human")
     public void human(Model model)
@@ -84,13 +84,13 @@ public class FabricController {
 		mapper.insert(vo);       
 	}
 	
-	@PostMapping("/sprite")
-    public void spriteSave(FabricVO vo)
-    {
-		log.info("Post SPRITE.................................");
-		log.info(vo);
-		mapper.insert(vo);       
-	}
+	// @PostMapping("/sprite")
+    // public void spriteSave(FabricVO vo)
+    // {
+	// 	log.info("Post SPRITE.................................");
+	// 	log.info(vo);
+	// 	mapper.insert(vo);       
+	// }
 	
 
 	@GetMapping("/make")
