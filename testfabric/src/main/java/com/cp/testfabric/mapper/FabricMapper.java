@@ -4,9 +4,6 @@ import java.util.List;
 
 import com.cp.testfabric.vo.FabricVO;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-
 public interface FabricMapper {
     
     // 시간 테스트
